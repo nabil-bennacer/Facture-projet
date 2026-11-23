@@ -1,0 +1,10 @@
+boto3>=1.35
+pymupdf>=1.25
+requests>=2.32
+duckdb>=1.2
+pandas>=2.2
+pyarrow>=18.0
+python-dotenv>=1.1
+mcp>=1.9
+anthropic>=0.52
+openai>=1.82
