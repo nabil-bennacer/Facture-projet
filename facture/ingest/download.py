@@ -17,11 +17,11 @@ def get_s3_client():
 
 def fetch():
     s3 = get_s3_client()
-    resp = s3.list_objects_v2(Bucket=S3_BUCKET)
-    objects = resp.get("Contents", [])
-
+    paginator = s3.get_paginator("list_objects_v2")
     remote_pdfs = [
-        obj["Key"] for obj in objects
+        obj["Key"]
+        for page in paginator.paginate(Bucket=S3_BUCKET)
+        for obj in page.get("Contents", [])
         if obj["Key"].endswith(".pdf") and "/" not in obj["Key"]
     ]
 
