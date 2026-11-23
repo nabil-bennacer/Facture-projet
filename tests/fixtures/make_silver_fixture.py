@@ -47,7 +47,7 @@ def main() -> None:
 
     for i in range(25):
         code = rng.choice(list(SUPPLIERS))
-        supplier, _category = SUPPLIERS[code]
+        supplier, category = SUPPLIERS[code]
         method = "ocr" if i % 2 else "text"
         source = f"facture_{code}-2025-{i + 1:04d}_{'scan' if method == 'ocr' else 'texte'}.pdf"
         sha = hashlib.sha256(source.encode()).hexdigest()
@@ -92,7 +92,7 @@ def main() -> None:
             doc_sha256=sha, invoice_number=f"{code}-2025-{i + 1:04d}", supplier_name=supplier,
             customer_name=rng.choice(CUSTOMERS), issue_date=issue, due_date=due, currency="EUR",
             total_ht=total_ht, total_tva=total_tva, total_ttc=total_ttc, payment_status=status,
-            extraction_method=method, quality_status=quality, quality_notes=notes,
+            category=category, extraction_method=method, quality_status=quality, quality_notes=notes,
             source_file=source, processed_at=processed_at,
         ))
 
@@ -103,7 +103,8 @@ def main() -> None:
             ("supplier_name", pa.string()), ("customer_name", pa.string()),
             ("issue_date", pa.date32()), ("due_date", pa.date32()), ("currency", pa.string()),
             ("total_ht", MONEY), ("total_tva", MONEY), ("total_ttc", MONEY),
-            ("payment_status", pa.string()), ("extraction_method", pa.string()),
+            ("payment_status", pa.string()), ("category", pa.string()),
+            ("extraction_method", pa.string()),
             ("quality_status", pa.string()), ("quality_notes", pa.string()),
             ("source_file", pa.string()), ("processed_at", ts),
         ]),
