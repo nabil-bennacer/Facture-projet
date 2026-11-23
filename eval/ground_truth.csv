@@ -1,0 +1,21 @@
+source_file,invoice_number,supplier_name,customer_name,issue_date,due_date,total_ht,total_tva,total_ttc
+facture_LG-2025-0005_scan.pdf,LG-2025-0005,Le Gall,Lombard,05/09/2025,04/11/2025,5819.19,1163.84,6983.03
+facture_C-2026-0004_scan.pdf,C-2026-0004,Chevalier,Grondin Pinto et Fils,22/02/2026,08/04/2026,8178.77,1635.75,9814.52
+facture_A-2026-0004_scan.pdf,A-2026-0004,Aubry,Fleury,23/03/2026,07/04/2026,10911.61,2182.32,13093.93
+facture_LG-2025-0008_scan.pdf,LG-2025-0008,Le Gall,Muller,14/09/2025,14/10/2025,6860.85,1372.17,8233.02
+facture_V-2026-0005_scan.pdf,V-2026-0005,Vasseur,Muller Salmon S.A.S.,28/08/2026,12/10/2026,171.64,34.33,205.97
+facture_V-2025-0007_scan.pdf,V-2025-0007,Vasseur,Chauvin,29/06/2025,14/07/2025,633.90,126.78,760.68
+facture_MS-2026-0005_scan.pdf,MS-2026-0005,Maury S.A.R.L.,Pereira,04/05/2026,03/06/2026,334.22,66.84,401.06
+facture_GPE-2026-0016_scan.pdf,GPE-2026-0016,Gimenez Payet et Fils,Foucher,08/04/2026,23/04/2026,421.85,84.37,506.22
+facture_GPE-2025-0009_scan.pdf,GPE-2025-0009,Gimenez Payet et Fils,Martineau,26/08/2025,10/10/2025,14942.17,2988.43,17930.60
+facture_BS-2026-0007_scan.pdf,BS-2026-0007,Bernard SARL,Jacob Aubert S.A.S.,18/11/2026,17/01/2027,246.92,49.38,296.30
+facture_C-2026-0007_scan.pdf,C-2026-0007,Chevalier,Mace S.A.,19/05/2026,03/06/2026,2549.56,509.91,3059.47
+facture_P-2026-0006_scan.pdf,P-2026-0006,Payet,Joly SA,29/04/2026,29/05/2026,11037.97,2207.59,13245.56
+facture_V-2025-0003_scan.pdf,V-2025-0003,Vasseur,Lombard,18/10/2025,02/12/2025,53.46,10.69,64.15
+facture_GPE-2026-0001_scan.pdf,GPE-2026-0001,Gimenez Payet et Fils,Foucher,13/10/2026,27/11/2026,2590.80,518.16,3108.96
+facture_GPE-2026-0005_scan.pdf,GPE-2026-0005,Gimenez Payet et Fils,Chauvin,25/03/2026,09/05/2026,6389.92,1277.98,7667.90
+facture_LG-2026-0004_scan.pdf,LG-2026-0004,Le Gall,Baron,14/11/2026,29/11/2026,2460.26,492.05,2952.31
+facture_P-2025-0002_scan.pdf,P-2025-0002,Payet,Mace S.A.,28/06/2025,12/08/2025,15897.98,3179.60,19077.58
+facture_GPE-2025-0013_scan.pdf,GPE-2025-0013,Gimenez Payet et Fils,Dumas,04/07/2025,18/08/2025,3903.81,780.76,4684.57
+facture_MS-2025-0013_scan.pdf,MS-2025-0013,Maury S.A.R.L.,Denis,02/11/2025,01/01/2026,1896.06,379.21,2275.27
+facture_A-2025-0003_scan.pdf,A-2025-0003,Aubry,Dumas,29/04/2025,13/06/2025,6306.05,1261.21,7567.26
