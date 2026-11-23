@@ -280,7 +280,7 @@ def build_silver():
     seen_invoice_numbers = set()
 
     for bf in bronze_files:
-        with open(bf) as f:
+        with open(bf, encoding="utf-8") as f:
             bronze = json.load(f)
 
         if bronze.get("status") != "success":

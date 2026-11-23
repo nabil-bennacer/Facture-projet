@@ -35,7 +35,7 @@ def is_already_done(sha: str) -> bool:
     bronze_file = BRONZE_DIR / f"{sha}.json"
     if not bronze_file.exists():
         return False
-    with open(bronze_file) as f:
+    with open(bronze_file, encoding="utf-8") as f:
         data = json.load(f)
     return data.get("status") == "success"
 
@@ -83,7 +83,7 @@ def build_bronze():
             errors += 1
             print(f"  ERR {pdf_path.name} : {e}")
 
-        with open(BRONZE_DIR / f"{sha}.json", "w") as f:
+        with open(BRONZE_DIR / f"{sha}.json", "w", encoding="utf-8") as f:
             json.dump(record, f, ensure_ascii=False, indent=2)
 
     print(f"\nBronze terminé : {processed} traités, {skipped} déjà faits, {errors} erreurs.")
