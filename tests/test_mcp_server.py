@@ -31,6 +31,8 @@ from mcp import Client, StdioServerParameters  # noqa: E402
 from facture.warehouse.build import build  # noqa: E402
 
 FIXTURE = ROOT / "tests" / "fixtures" / "silver"
+# Un fichier qui existe forcément, hors des dossiers autorisés (Windows ou Linux/CI)
+OUTSIDE_FILE = (ROOT / "requirements.txt").as_posix()
 failures: list[str] = []
 
 
@@ -57,8 +59,10 @@ async def call(client: Client, tool: str, args: dict | None = None):
 
 async def main() -> None:
     build()
+    # Lancé depuis un autre dossier que la racine, comme le ferait Claude Desktop
     params = StdioServerParameters(command=sys.executable, args=["-m", "facture.mcp_server"],
-                                   env={**os.environ, **ENV}, cwd=str(ROOT))
+                                   env={**os.environ, **ENV, "PYTHONPATH": str(ROOT)},
+                                   cwd=str(TMP))
     async with Client(params) as client:
         print("\nOutils exposés")
         tools = {t.name for t in (await client.list_tools()).tools}
@@ -112,6 +116,17 @@ async def main() -> None:
         check("tables silver décrites", {"silver.invoices", "silver.invoice_lines", "silver.quarantine"} <= set(d["tables"]))
         check("montants typés DECIMAL", d["tables"]["silver.invoices"]["columns"]["total_ttc"].startswith("DECIMAL"))
 
+        print("\nbusiness_indicators (gold)")
+        err, d, _ = await call(client, "business_indicators", {"indicator": "monthly_spend"})
+        s = sum(Decimal(r["total_ttc"]) for r in d["rows"])
+        check("somme mensuelle = total général", not err and s == direct("SELECT sum(total_ttc) FROM INVOICES")[0][0])
+        err, d, _ = await call(client, "business_indicators", {"indicator": "supplier_outstanding"})
+        unpaid = direct("SELECT sum(total_ttc) FROM INVOICES WHERE payment_status <> 'Payée'")[0][0]
+        check("encours fournisseurs = factures non payées",
+              not err and sum(Decimal(r["unpaid_ttc"]) for r in d["rows"]) == unpaid)
+        err, _, _ = await call(client, "business_indicators", {"indicator": "silver.invoices"})
+        check("indicateur inconnu refusé", err)
+
         print("\nrun_sql (lecture)")
         err, d, _ = await call(client, "run_sql", {"query": "SELECT supplier_name, count(*) AS n FROM silver.invoices GROUP BY 1 ORDER BY 2 DESC"})
         check("SELECT autorisé", not err and d["row_count"] > 0)
@@ -135,7 +150,7 @@ async def main() -> None:
             "INSTALL": "INSTALL httpfs",
             "SET": "SET enable_external_access = true",
             "multi-instructions": "SELECT 1; DROP VIEW silver.invoices",
-            "fichier hors entrepôt": "SELECT * FROM read_text('C:/Windows/win.ini')",
+            "fichier hors entrepôt": f"SELECT * FROM read_text('{OUTSIDE_FILE}')",
         }
         for name, sql in attacks.items():
             err, _, text = await call(client, "run_sql", {"query": sql})

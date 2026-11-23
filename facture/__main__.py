@@ -5,6 +5,9 @@ COMMANDS = {
     "bronze": "Construit la couche bronze",
     "silver": "Construit la couche silver",
     "eval": "Évalue la qualité de l'OCR",
+    "warehouse": "(Re)construit l'entrepôt DuckDB (vues sur bronze/silver)",
+    "mcp": "Lance le serveur MCP (stdio)",
+    "agent": "Lance l'agent conversationnel",
 }
 
 
@@ -35,6 +38,18 @@ def main():
     elif command == "eval":
         from facture.evaluation.evaluate import run_evaluation
         run_evaluation()
+
+    elif command == "warehouse":
+        from facture.warehouse.build import build
+        build()
+
+    elif command == "mcp":
+        from facture.mcp_server.server import main as run_mcp
+        run_mcp()
+
+    elif command == "agent":
+        from facture.agent.cli import main as run_agent
+        run_agent(sys.argv[2:])
 
 
 if __name__ == "__main__":

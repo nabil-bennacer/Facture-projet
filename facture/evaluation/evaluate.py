@@ -25,7 +25,7 @@ RESOLUTIONS = [150, 200]
 
 def load_ground_truth() -> dict[str, dict]:
     gt = {}
-    with open(GT_PATH) as f:
+    with open(GT_PATH, encoding="utf-8", newline="") as f:
         for row in csv.DictReader(f):
             gt[row["source_file"]] = row
     return gt
