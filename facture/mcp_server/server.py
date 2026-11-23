@@ -4,6 +4,7 @@
 """
 from __future__ import annotations
 
+import os
 from typing import Any, Literal
 
 from mcp.server.mcpserver import MCPServer
@@ -11,6 +12,7 @@ from mcp.server.mcpserver.exceptions import ToolError
 from mcp_types import ToolAnnotations
 
 from facture.mcp_server import queries as q
+from facture.warehouse.db import ROOT
 
 server = MCPServer(
     name="factures",
@@ -86,10 +88,20 @@ def get_invoice(invoice_number: str | None = None, doc_sha256: str | None = None
 
 @server.tool(annotations=READ_ONLY, description=(
     "Schéma de l'entrepôt : tables (silver.invoices, silver.invoice_lines, silver.quarantine, "
-    "bronze.documents), colonnes et types, valeurs possibles des statuts, plage de dates. "
+    "bronze.documents, vues gold d'indicateurs), colonnes et types, valeurs possibles des statuts, plage de dates. "
     "À appeler avant d'écrire une requête avec run_sql."))
 def describe_schema() -> dict[str, Any]:
     return _run(q.describe_schema)
+
+
+@server.tool(annotations=READ_ONLY, description=(
+    "Indicateurs métier précalculés (couche gold) : 'monthly_spend' (montants par mois), "
+    "'supplier_outstanding' (encours non payé et retards par fournisseur), "
+    "'category_spend' (dépenses par catégorie et par année)."))
+def business_indicators(
+        indicator: Literal["monthly_spend", "supplier_outstanding", "category_spend"]
+) -> dict[str, Any]:
+    return _run(q.business_indicator, indicator)
 
 
 @server.tool(annotations=READ_ONLY, description=(
@@ -101,4 +113,8 @@ def run_sql(query: str, max_rows: int = 100) -> dict[str, Any]:
 
 
 def main() -> None:
+    # Les vues de l'entrepôt utilisent des chemins relatifs à la racine du projet, et le
+    # verrouillage des accès fichiers les vérifie depuis le dossier courant : on s'y place,
+    # quel que soit le dossier d'où le client MCP (ex. Claude Desktop) lance le serveur.
+    os.chdir(ROOT)
     server.run("stdio")

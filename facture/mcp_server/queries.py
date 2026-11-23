@@ -193,13 +193,26 @@ COLUMN_DOCS = {
     "silver.invoice_lines": "Lignes de facture ; jointure sur doc_sha256.",
     "silver.quarantine": "Documents rejetés (absents de silver.invoices), avec le motif.",
     "bronze.documents": "Texte brut extrait de chaque PDF (natif ou OCR) et métadonnées.",
+    "gold.monthly_spend": "Indicateur : nombre et montants des factures par mois d'émission.",
+    "gold.supplier_outstanding": "Indicateur : encours (factures non payées) et retards par fournisseur.",
+    "gold.category_spend": "Indicateur : dépenses par catégorie et par année.",
 }
+
+INDICATORS = {"monthly_spend", "supplier_outstanding", "category_spend"}
+
+
+def business_indicator(s: Session, indicator: str) -> dict[str, Any]:
+    if indicator not in INDICATORS:
+        raise QueryError(f"indicator doit être l'une des valeurs {sorted(INDICATORS)} (reçu : {indicator!r})")
+    rows, _ = s.query(f"SELECT * FROM gold.{indicator}")
+    return {"indicator": indicator, "currency": "EUR", "rows": rows}
 
 
 def describe_schema(s: Session) -> dict[str, Any]:
     cols, _ = s.query(
         "SELECT schema_name, table_name, column_name, data_type FROM duckdb_columns() "
-        "WHERE schema_name IN ('silver', 'bronze') ORDER BY schema_name, table_name, column_index")
+        "WHERE schema_name IN ('silver', 'bronze', 'gold') "
+        "ORDER BY schema_name, table_name, column_index")
     tables: dict[str, Any] = {}
     for c in cols:
         name = f"{c['schema_name']}.{c['table_name']}"
